@@ -288,7 +288,8 @@ showdown.Converter = function (converterOptions) {
     text = text.replace(/\r/g, '\n'); // Mac to Unix
 
     // Stardardize line spaces
-    text = text.replace(/\u00A0/g, '&nbsp;');
+    // text = text.replace(/\u00A0/g, '&nbsp;');
+    text = text.replace(/\u00A0/g, options.replace00A0 || '&nbsp;');
 
     if (options.smartIndentationFix) {
       text = rTrimInputText(text);
@@ -323,6 +324,10 @@ showdown.Converter = function (converterOptions) {
     text = showdown.subParser('blockGamut')(text, options, globals);
     text = showdown.subParser('unhashHTMLSpans')(text, options, globals);
     text = showdown.subParser('unescapeSpecialChars')(text, options, globals);
+
+    if (options.replace00A0) {
+      text = text.replace(new RegExp(options.replace00A0, 'g'), '&nbsp;');
+    }
 
     // attacklab: Restore dollar signs
     text = text.replace(/¨D/g, '$$');
