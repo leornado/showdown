@@ -307,7 +307,9 @@ showdown.Converter = function (converterOptions) {
      * match consecutive blank lines with /\n+/ instead of something
      * contorted like /[ \t]*\n+/
      */
-    text = text.replace(/^[ \t]+$/mg, '');
+    if (options.noStripAnyLinesPrefixBlank !== true) {
+      text = text.replace(/^[ \t]+$/mg, '');
+    }
 
     //run languageExtensions
     showdown.helper.forEach(langExtensions, function (ext) {
