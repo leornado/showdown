@@ -6,10 +6,10 @@ showdown.subParser('blockQuotes', function (text, options, globals) {
   // add a couple extra lines after the text and endtext mark
   text = text + '\n\n';
 
-  var rgx = /(^ {0,3}>[ \t]?.+\n(.+\n)*\n*)+/gm;
+  var rgx = options.blockQuoteStartFromLineHead ? /(^>[ \t]?.+\n(.+\n)*\n*)+/gm : /(^ {0,3}>[ \t]?.+\n(.+\n)*\n*)+/gm;
 
   if (options.splitAdjacentBlockquotes) {
-    rgx = /^ {0,3}>[\s\S]*?(?:\n\n)/gm;
+    rgx = options.blockQuoteStartFromLineHead ? /^>[\s\S]*?(?:\n\n)/gm : /^ {0,3}>[\s\S]*?(?:\n\n)/gm;
   }
 
   text = text.replace(rgx, function (bq) {
