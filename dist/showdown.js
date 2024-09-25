@@ -1,4 +1,4 @@
-;/*! showdown v 1.9.2 - 28-06-2022 */
+;/*! showdown v 1.9.3 - 25-09-2024 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -2487,7 +2487,9 @@ showdown.Converter = function (converterOptions) {
      * match consecutive blank lines with /\n+/ instead of something
      * contorted like /[ \t]*\n+/
      */
-    text = text.replace(/^[ \t]+$/mg, '');
+    if (options.noStripAnyLinesPrefixBlank !== true) {
+      text = text.replace(/^[ \t]+$/mg, '');
+    }
 
     //run languageExtensions
     showdown.helper.forEach(langExtensions, function (ext) {
@@ -3006,10 +3008,10 @@ showdown.subParser('blockQuotes', function (text, options, globals) {
   // add a couple extra lines after the text and endtext mark
   text = text + '\n\n';
 
-  var rgx = /(^ {0,3}>[ \t]?.+\n(.+\n)*\n*)+/gm;
+  var rgx = options.blockQuoteStartFromLineHead ? /(^>[ \t]?.+\n(.+\n)*\n*)+/gm : /(^ {0,3}>[ \t]?.+\n(.+\n)*\n*)+/gm;
 
   if (options.splitAdjacentBlockquotes) {
-    rgx = /^ {0,3}>[\s\S]*?(?:\n\n)/gm;
+    rgx = options.blockQuoteStartFromLineHead ? /^>[\s\S]*?(?:\n\n)/gm : /^ {0,3}>[\s\S]*?(?:\n\n)/gm;
   }
 
   text = text.replace(rgx, function (bq) {
